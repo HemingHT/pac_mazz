@@ -29,6 +29,22 @@ class Player:
         future_x = self.position.x + (self.next_direction.x * self.speed)
         future_y = self.position.y + (self.next_direction.y * self.speed)
         
+        # 3. Define the Hitbox size 
+        # (10 is usually good for a 24x24 or 26x26 pixel image)
+        hitbox = 10 
+        
+        # Calculate the 4 corners of the future position
+        left = future_x - hitbox
+        right = future_x + hitbox
+        top = future_y - hitbox
+        bottom = future_y + hitbox
+
+        # 4. Check if ANY of those 4 corners hit a wall
+        hit_top_left = board.is_wall(left, top)
+        hit_top_right = board.is_wall(right, top)
+        hit_bottom_left = board.is_wall(left, bottom)
+        hit_bottom_right = board.is_wall(right, bottom)
+        
         # 3. Check Collision
         # We check the CENTER point. (For perfect collision, we usually check 4 corners, 
         # but let's start with center for simplicity).
