@@ -1,0 +1,37 @@
+name: Build and Deploy Pygbag Game
+
+# This tells GitHub to run this script every time you push to 'main'
+on:
+  push:
+    branches:
+      - main 
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write # Needed to push the web files to your repo
+    
+    steps:
+      - name: Grab the code
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11' 
+
+      - name: Install Raylib and Pygbag
+        run: |
+          python -m pip install --upgrade pip
+          pip install pygbag raylib-python-cffi
+
+      - name: Build the Web Version
+        # This creates the build/web folder just like on your computer
+        run: pygbag --build .
+
+      - name: Publish to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./build/web
